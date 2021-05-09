@@ -19,7 +19,7 @@ class GameBoard {
     this.grid = [];
     this.DOMGrid.innerHTML = '';
     this.DOMGrid.style.cssText = `grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
-    
+
     //draws the grid
     level.forEach((square) => {
       const div = document.createElement('div');
@@ -31,7 +31,7 @@ class GameBoard {
       if (CLASS_LIST[square] === OBJECT_TYPE.DOT) this.dotCount++;
 
     })
-  } 
+  }
 
 
   //adds the Class
@@ -50,6 +50,27 @@ class GameBoard {
   rotateDiv(pos, deg) {
     this.grid[pos].style.transform = `rotate(${deg}deg)`;
   }
+
+
+  moveCharacter(character) {
+    if (character.shouldMove()) {
+      const { nextMovePos, direction } = character.getNextMove(
+        this.objectExists
+      );
+      const { classesToRemove, classesToAdd } = character.makeMove();
+
+      if (character.rotation && nextMovePos !== character.pos) {
+        this.rotateDiv(nextMovePos, character.dir.rotation);
+        this.rotateDiv(character.pos, 0);
+      }
+
+      this.removeObject(character.pos, classesToRemove);
+      this.addObject(nextMovePos, classesToAdd);
+
+      character.setNewPos(nextMovePos, direction);
+    }
+  }
+
 
   //static method - can be called without instantiating the class
   static createGameBoard(DOMGrid, level) {
