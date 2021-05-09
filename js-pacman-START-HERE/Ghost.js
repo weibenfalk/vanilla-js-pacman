@@ -29,4 +29,19 @@ class Ghost {
     );
     return { nextMovePos, direction }
   }
+
+  makeMove() {
+    const classesToRemove = [OBJECT_TYPE.GHOST, OBJECT_TYPE.SCARED, this.name];
+    let classesToAdd = [OBJECT_TYPE.GHOST, this.name];
+
+    if (this.isScared) classesToAdd = [...classesToAdd, OBJECT_TYPE.SCARED];
+    return { classesToRemove, classesToAdd };
+  }
+
+  setNewPos(nextMovePos, direction) {
+    this.pos = nextMovePos,
+    this.dir = direction
+  }
  }
+
+ export default Ghost;
